@@ -3,5 +3,6 @@ NOT_CODE/
 main.dSYM/
 .vscode/
 
+.DS_Store
 main
 main_dct
