@@ -238,7 +238,7 @@ int main()
 
     cout << "Result exported, conflict count: " << conflict_count << endl;
     end_time = clock();
-    cout << "Total time taken: " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds" << endl;
+    cout << "Total time taken: " << (end_time - initial_time) / CLOCKS_PER_SEC << " seconds" << endl;
 
     return 0;
 }
