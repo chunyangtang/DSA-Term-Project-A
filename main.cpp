@@ -42,7 +42,7 @@ struct Node
 };
 
 // string data_path = "test_folder_base/test/";
-string data_path = "test_folder_base/custom_1/";
+string data_path = "test_folder_base/test/";
 
 int main()
 {
@@ -162,6 +162,38 @@ int main()
             while (hash_table[query_hash].h == -1)
             {
                 query_hash = (query_hash + 1) % MD;
+            }
+        }
+        if (hash_table[query_hash].ptr != nullptr)
+        {
+            // conpare the query image with the source image
+            int current_height = hash_table[query_hash].h;
+            int current_width = hash_table[query_hash].w;
+            bool found = false;
+            while (hash_table[query_hash].ptr != nullptr)
+            {
+                bool match = true;
+                for (int r = 0; r < QUERY_HEIGHT; r++)
+                {
+                    for (int c = 0; c < QUERY_WIDTH; c++)
+                    {
+                        if (source_array[current_height + r][current_width + c] != query_array[r][c])
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (!match)
+                        break;
+                }
+                if (match)
+                {
+                    found = true;
+                    break;
+                }
+                hash_table[query_hash].h = hash_table[query_hash].ptr->h;
+                hash_table[query_hash].w = hash_table[query_hash].ptr->w;
+                hash_table[query_hash].ptr = hash_table[query_hash].ptr->ptr;
             }
         }
         result += to_string(hash_table[query_hash].w) + " " + to_string(hash_table[query_hash].h) + "\n";
