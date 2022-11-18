@@ -40,7 +40,8 @@ struct Node
     }
 };
 
-string data_path = "test_folder_base/test/";
+// string data_path = "test_folder_base/test/";
+string data_path = "data_custom_1/";
 
 int main()
 {
