@@ -1,9 +1,10 @@
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
 #include <assert.h>
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <string>
-#include <Python.h>
 
 #pragma pack(1)
 
