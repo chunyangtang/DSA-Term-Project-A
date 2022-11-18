@@ -105,7 +105,6 @@ int main()
                 for (int c = current_width; c < current_width + QUERY_WIDTH; c++)
                 {
                     part_array[r - current_height][c - current_width] = source_array[r][c]; // need optimization
-                    // current_hash = (256 * current_hash + source_array[r][c]) % MD;
                 }
             }
             // converting part_array into a python 2d list
