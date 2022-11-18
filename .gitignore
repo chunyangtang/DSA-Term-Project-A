@@ -2,9 +2,11 @@
 NOT_CODE/
 main.dSYM/
 main_dct.dSYM/
+main_dct_c.dSYM/
 .vscode/
 __pycache__/
 
 .DS_Store
 main
 main_dct
+main_dct_c
