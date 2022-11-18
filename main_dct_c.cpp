@@ -133,6 +133,7 @@ int main()
     {
         while (current_width <= w - QUERY_WIDTH)
         {
+            cout << "Processing row " << current_height << " column " << current_width << endl;
             int current_hash = 0;
             for (int r = current_height; r < current_height + QUERY_HEIGHT; r++)
             {

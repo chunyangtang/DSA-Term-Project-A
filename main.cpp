@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <vector>
 #include <string>
+#include <time.h>
 
 #pragma pack(1)
 
@@ -45,6 +46,8 @@ string data_path = "test_folder_base/custom_1/";
 
 int main()
 {
+    float initial_time = clock();
+    float start_time = clock(), end_time;
     // opening the source file
     FILE *source_file;
     string source_path = data_path + "source_g.data";
@@ -77,6 +80,10 @@ int main()
     // closing the source file
     fclose(source_file);
 
+    end_time = clock();
+    cout << "Time taken to read source file: " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds" << endl;
+    start_time = clock();
+
     // computing hash value of each part of source image
     int hash_count;
     Node hash_table[MD];
@@ -101,6 +108,10 @@ int main()
         current_height++;
     }
     assert(hash_count == (SOURCE_HEIGHT - QUERY_HEIGHT + 1) * (SOURCE_WIDTH - QUERY_WIDTH + 1));
+
+    end_time = clock();
+    cout << "Time taken to compute hash table: " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds" << endl;
+    start_time = clock();
 
     // circularly opening the query file and compute result
     FILE *query_file;
@@ -158,6 +169,9 @@ int main()
         query_turn++;
     }
 
+    end_time = clock();
+    cout << "Time taken of query: " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds" << endl;
+
     // writing the result to the file
     FILE *result_file;
     string result_path = data_path + "result.txt";
@@ -171,6 +185,8 @@ int main()
     fclose(result_file);
 
     cout << "Result exported, conflict count: " << conflict_count << endl;
+    end_time = clock();
+    cout << "Total time taken: " << (end_time - initial_time) / CLOCKS_PER_SEC << " seconds" << endl;
 
     return 0;
 }
