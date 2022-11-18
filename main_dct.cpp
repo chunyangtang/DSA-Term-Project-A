@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <iostream>
 #include <iomanip>
@@ -79,6 +80,8 @@ int main()
     fclose(source_file);
 
     // initializing python interface
+    // Set PYTHONPATH TO working directory
+    setenv("PYTHONPATH", ".", 1);
     Py_Initialize();
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\".\")");
@@ -88,7 +91,7 @@ int main()
     PyObject *pArgs = PyTuple_New(1);
 
     // computing hash value of each part of source image
-    int hash_count;
+    int hash_count = 0;
     Node hash_table[MD];
     int current_height = 0, current_width = 0;
     int part_array[QUERY_HEIGHT][QUERY_WIDTH];
@@ -217,6 +220,8 @@ int main()
     }
     fprintf(result_file, "%s", result.c_str());
     fclose(result_file);
+
+    Py_FinalizeEx();
 
     cout << "Result exported, conflict count: " << conflict_count << endl;
 
