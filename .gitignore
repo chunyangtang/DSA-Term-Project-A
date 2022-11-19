@@ -6,6 +6,7 @@ main_dct_c.dSYM/
 main_dct_pc.dSYM/
 .vscode/
 __pycache__/
+process_folder/
 
 .DS_Store
 main
