@@ -9,7 +9,7 @@ MD = 600011
 def dct(img):
     img = np.array(img, dtype=np.float32)
     img_dct = cv2.dct(img)
-    threshold = 0 # img_dct.sum() / img_dct.size()
+    threshold = 0
     current_hash = 0
     for i in range(BLOCK_SIZE):
         for j in range(BLOCK_SIZE):

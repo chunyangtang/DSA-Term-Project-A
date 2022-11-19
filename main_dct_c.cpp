@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <string>
+#include <cstring>
 
 #pragma pack(1)
 
@@ -90,7 +91,7 @@ struct Node
     }
 };
 
-string data_path = "test_folder_advanced/custom_1/";
+string data_path = "test_folder_advanced/basic2/";
 
 int main()
 {

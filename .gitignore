@@ -3,6 +3,7 @@ NOT_CODE/
 main.dSYM/
 main_dct.dSYM/
 main_dct_c.dSYM/
+main_dct_pc.dSYM/
 .vscode/
 __pycache__/
 
@@ -10,3 +11,4 @@ __pycache__/
 main
 main_dct
 main_dct_c
+main_dct_pc
