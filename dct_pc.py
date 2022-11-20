@@ -1,10 +1,13 @@
 import cv2
 import numpy as np
 import os
+from tqdm import tqdm
 
 QUERY_SIZE = 64
 
-i_path = 'process_folder'
+# Please change the output path of main_dct_pc.cpp simultaneous
+i_path = 'test_folder_advanced/basic2'
+o_path = 'process_folder.nosync'
 
 if __name__ == '__main__':
     if os.path.isdir(i_path):
@@ -15,8 +18,8 @@ if __name__ == '__main__':
 
                 if f_name == 'source_g.png':
                     source = img
-                    for i in range(source.shape[0] - QUERY_SIZE):
-                        for j in range(source.shape[1] - QUERY_SIZE):
+                    for i in tqdm(range(source.shape[0] - QUERY_SIZE+1)):
+                        for j in range(source.shape[1] - QUERY_SIZE+1):
                             img = source[i:i + QUERY_SIZE, j:j + QUERY_SIZE]
 
                             img = np.array(img, dtype=np.float32)
@@ -27,7 +30,7 @@ if __name__ == '__main__':
                             h, w = img.shape[0], img.shape[1]
                             i_str = str(i)
                             f = open(os.path.join(
-                                i_path, f_name[:-4] + str(i) + '_' + str(j) + '.data'), 'wb')
+                                o_path, f_name[:-4] + str(i) + '_' + str(j) + '.data'), 'wb')
                             f.write(h.to_bytes(4, 'little'))
                             f.write(w.to_bytes(4, 'little'))
                             for r in range(h):
@@ -43,7 +46,7 @@ if __name__ == '__main__':
                     img = np.where(img > img_average, 1, 0)
 
                     h, w = img.shape[0], img.shape[1]
-                    f = open(os.path.join(i_path, f_name[:-4] + '.data'), 'wb')
+                    f = open(os.path.join(o_path, f_name[:-4] + '.data'), 'wb')
                     f.write(h.to_bytes(4, 'little'))
                     f.write(w.to_bytes(4, 'little'))
                     for r in range(h):

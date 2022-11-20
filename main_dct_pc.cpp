@@ -47,7 +47,7 @@ struct Node
 };
 
 string data_output_path = "test_folder_advanced/basic2/";
-string data_path = "process_folder/";
+string data_path = "process_folder.nosync/";
 
 int main()
 {
@@ -66,49 +66,50 @@ int main()
         while (current_width <= SOURCE_WIDTH - QUERY_WIDTH)
         {
             int current_hash = 0;
-            for (int r = current_height; r < current_height + QUERY_HEIGHT; r++)
+            // opening the part source file
+            source_path = data_path + "source_g" + to_string(current_height) + "_" + to_string(current_width) + ".data";
+            part_source_file = fopen(source_path.c_str(), "rb");
+            if (part_source_file == NULL)
             {
-                for (int c = current_width; c < current_width + QUERY_WIDTH; c++)
+                cout << "Error: source file " << current_height << ' ' << current_width << " not found!" << endl;
+                return 0;
+            }
+
+            // storing the height and width of source image
+            int h, w;
+            fread(&h, sizeof(int), 1, part_source_file);
+            fread(&w, sizeof(int), 1, part_source_file);
+            assert(h == QUERY_HEIGHT && w == QUERY_WIDTH);
+
+            // computing the hash value of the part
+            int hash_value = 0;
+            int t;
+            srand(1);
+            for (int r = 0; r < h; r++)
+            {
+                for (int c = 0; c < w; c++)
                 {
-                    // opening the part source file
-                    source_path = data_path + "source" + to_string(r) + "_" + to_string(c) + "_g.data";
-                    part_source_file = fopen(source_path.c_str(), "rb");
-                    if (part_source_file == NULL)
-                    {
-                        cout << "Error: source file " << r << ' ' << c << " not found!" << endl;
-                        return 0;
-                    }
-
-                    // storing the height and width of source image
-                    int h, w;
-                    fread(&h, sizeof(int), 1, part_source_file);
-                    fread(&w, sizeof(int), 1, part_source_file);
-                    assert(h == QUERY_HEIGHT && w == QUERY_WIDTH);
-
-                    // computing the hash value of the part
-                    int hash_value = 0;
-                    int t;
-                    for (int r = 0; r < h; r++)
-                    {
-                        for (int c = 0; c < w; c++)
-                        {
-                            fread(&t, sizeof(int), 1, part_source_file);
-                            if (r < BLOCK_SIZE && c < BLOCK_SIZE)
-                                hash_value = (256 * hash_value + t) % MD;
-                        }
-                    }
-                    // closing the source file
-                    fclose(part_source_file);
+                    fread(&t, sizeof(int), 1, part_source_file);
+                    if (r < BLOCK_SIZE && c < BLOCK_SIZE)
+                        hash_value = (256 * hash_value + t * (rand() % 1000000)) % MD;
                 }
             }
+            // closing the source file
+            fclose(part_source_file);
             hash_count++;
-            hash_table[current_hash].insert(current_height, current_width);
+            hash_table[hash_value].insert(current_height, current_width);
             current_width++;
         }
         current_width = 0;
         current_height++;
+        cout << '-';
     }
     assert(hash_count == (SOURCE_HEIGHT - QUERY_HEIGHT + 1) * (SOURCE_WIDTH - QUERY_WIDTH + 1));
+
+    cout << endl;
+    end_time = clock();
+    cout << "Hash table build time: " << (end_time - start_time) / CLOCKS_PER_SEC << "s" << endl;
+    start_time = clock();
 
     // circularly opening the query file and compute result
     FILE *query_file;
@@ -134,13 +135,14 @@ int main()
 
         // computing hash value of query image
         int t;
+        srand(1);
         for (int r = 0; r < h; r++)
         {
             for (int c = 0; c < w; c++)
             {
                 fread(&t, sizeof(int), 1, query_file);
                 if (r < BLOCK_SIZE && c < BLOCK_SIZE)
-                    query_hash = (256 * query_hash + t) % MD;
+                    query_hash = (256 * query_hash + t * (rand() % 1000000)) % MD;
             }
         }
 
@@ -162,7 +164,7 @@ int main()
             {
                 // computing pHash of part source file with larger block size
 
-                source_path = data_path + "source" + to_string(hash_table[query_hash].h) + to_string(hash_table[query_hash].w) + "_g.data";
+                source_path = data_path + "source_g" + to_string(hash_table[query_hash].h) + '_' + to_string(hash_table[query_hash].w) + ".data";
                 part_source_file = fopen(source_path.c_str(), "rb");
                 if (part_source_file == NULL)
                 {
@@ -179,13 +181,14 @@ int main()
                 // computing the hash value of the part
                 int hash_value = 0;
                 int t;
+                srand(1);
                 for (int r = 0; r < h; r++)
                 {
                     for (int c = 0; c < w; c++)
                     {
                         fread(&t, sizeof(int), 1, part_source_file);
                         if (r < LARGE_BLOCK_SIZE && c < LARGE_BLOCK_SIZE)
-                            hash_value = (256 * hash_value + t) % MD;
+                            hash_value = (256 * hash_value + t * (rand() % 1000000)) % MD;
                     }
                 }
                 // closing the source file
@@ -198,26 +201,25 @@ int main()
                     return 0;
                 }
 
-                int h, w;
-                int query_hash = 0;
+                int query_hash_large = 0;
                 fread(&h, sizeof(int), 1, query_file);
                 fread(&w, sizeof(int), 1, query_file);
                 assert(h == QUERY_HEIGHT && w == QUERY_WIDTH);
 
                 // computing hash value of query image
-                int t;
+                srand(1);
                 for (int r = 0; r < h; r++)
                 {
                     for (int c = 0; c < w; c++)
                     {
                         fread(&t, sizeof(int), 1, query_file);
                         if (r < LARGE_BLOCK_SIZE && c < LARGE_BLOCK_SIZE)
-                            query_hash = (256 * query_hash + t) % MD;
+                            query_hash_large = (256 * query_hash_large + t * (rand() % 1000000)) % MD;
                     }
                 }
                 fclose(query_file);
 
-                if (hash_value == query_hash)
+                if (hash_value == query_hash_large)
                 {
                     found = true;
                     break;
@@ -232,6 +234,9 @@ int main()
         query_turn++;
     }
 
+    end_time = clock();
+    cout << "Query time: " << (end_time - start_time) / CLOCKS_PER_SEC << "s" << endl;
+
     // writing the result to the file
     FILE *result_file;
     string result_path = data_output_path + "result.txt";
@@ -245,6 +250,8 @@ int main()
     fclose(result_file);
 
     cout << "Result exported, conflict count: " << conflict_count << endl;
+    end_time = clock();
+    cout << "Total time: " << (end_time - initial_time) / CLOCKS_PER_SEC << "s" << endl;
 
     return 0;
 }
