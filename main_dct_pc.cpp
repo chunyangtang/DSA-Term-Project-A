@@ -46,7 +46,7 @@ struct Node
     }
 };
 
-string data_output_path = "test_folder_advanced/basic2/";
+string data_output_path = "test_folder_advanced/test/";
 string data_path = "process_folder.nosync/";
 
 int main()

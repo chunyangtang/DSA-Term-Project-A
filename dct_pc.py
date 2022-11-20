@@ -6,7 +6,7 @@ from tqdm import tqdm
 QUERY_SIZE = 64
 
 # Please change the output path of main_dct_pc.cpp simultaneous
-i_path = 'test_folder_advanced/basic2'
+i_path = 'test_folder_advanced/test'
 o_path = 'process_folder.nosync'
 
 if __name__ == '__main__':
