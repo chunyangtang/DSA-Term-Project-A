@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
                             img = np.array(img, dtype=np.float32)
                             img = cv2.dct(img)
-                            img_average = np.average(img)
+                            img_average = np.median(img)
                             img = np.where(img > img_average, 1, 0)
 
                             h, w = img.shape[0], img.shape[1]
@@ -42,7 +42,7 @@ if __name__ == '__main__':
                 else:
                     img = np.array(img, dtype=np.float32)
                     img = cv2.dct(img)
-                    img_average = np.average(img)
+                    img_average = np.median(img)
                     img = np.where(img > img_average, 1, 0)
 
                     h, w = img.shape[0], img.shape[1]

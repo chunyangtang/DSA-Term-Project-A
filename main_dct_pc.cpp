@@ -14,7 +14,7 @@ using namespace std;
 #define SOURCE_WIDTH 512
 #define QUERY_HEIGHT 64
 #define QUERY_WIDTH 64
-#define MD 600011
+#define MD 600011 // 5000011
 #define QUERY_TURNS 8
 #define PI 3.1415926
 #define NUM 64
@@ -56,6 +56,7 @@ int main()
 
     // computing hash value of each part of source image
     int hash_count = 0;
+    // Node *hash_table = new Node[MD];
     Node hash_table[MD];
     int current_height = 0, current_width = 0;
 
@@ -250,6 +251,7 @@ int main()
     fclose(result_file);
 
     cout << "Result exported, conflict count: " << conflict_count << endl;
+    // delete[] hash_table;
     end_time = clock();
     cout << "Total time: " << (end_time - initial_time) / CLOCKS_PER_SEC << "s" << endl;
 
